@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE testset SYSTEM
+  "classpath://org/ow2/mind/test/mind_test_v1.dtd">
+
+<testset name="testSuite1">
+    <config name="conf1">
+        <command>cmd1</command>
+    </config>
+    <config name="conf2" targetDescriptor="foo">
+        <mindc />
+        <command>cmd2</command>
+    </config>
+    <test name="test1" adl="foo.bar1" configRefs="conf2"/>
+    <test name="test2" adl="foo.bar2" configRefs="conf1,conf2"/>
+    <test name="test3" adl="foo.bar3" configRefs="all"/>
+</testset>

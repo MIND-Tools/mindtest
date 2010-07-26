@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE testset SYSTEM
+  "classpath://org/ow2/mind/test/mind_test_v1.dtd">
+
+<testset name="testSet">
+    <config name="simple" targetDescriptor="simple">
+        <mindc/>
+        <command>${EXEC_NAME}</command>
+    </config>
+    
+    <config name="optimize" targetDescriptor="simple">
+        <mindc cFlags="-O3"/>
+        <command>${EXEC_NAME}</command>
+    </config>
+    
+    <config name="warning" targetDescriptor="simple">
+        <mindc cFlags="-Wall -Werror"/>
+        <command>${EXEC_NAME}</command>
+    </config>
+    
+    <test name="test1" adl="foo.Bar" configRefs="all"/>
+</testset>

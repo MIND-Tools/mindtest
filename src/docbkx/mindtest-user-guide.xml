@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "./dtd/docbookx.dtd" [
+<!ENTITY % myents SYSTEM "./shared.ent" >
+%myents;
+]>
+<book status="draft">
+    <title>
+        <emphasis>&productName;</emphasis> User Guide 
+    </title>
+    <subtitle>version <?eval ${project.version}?></subtitle>
+    
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="userGuide/intro-chapter.xml" />
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="userGuide/testset.xml" />
+</book>

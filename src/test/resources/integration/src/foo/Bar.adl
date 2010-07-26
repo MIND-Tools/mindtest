@@ -1,0 +1,11 @@
+primitive foo.Bar {
+  provides Main as main;
+  
+  source {{
+    /* int main(int argc, string[] argv) */
+    int METH(main, main) (int argc, char *argv[]){
+        printf("In foo.Bar\n");
+        return 0;
+    }
+  }}
+}

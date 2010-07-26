@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "../dtd/docbookx.dtd" [
+<!ENTITY % myents SYSTEM "../shared.ent" >
+%myents;
+]>
+<chapter id="testset">
+  <title>
+      Test Set File
+  </title>
+  
+  <section id="testset.syntax">
+    <title>Test Set syntax</title>
+    
+    <para>Tests to be run by <code>&productName;</code> are descipbed in an XML file
+      usually called <filename>testSet.xml</filename>. This file defines a set of
+      configurations and a set of tests that use these configurations. A test 
+      specifies the ADL to be tested, while a configuration describes how to compile
+      this ADL and execute the resulting executable.</para>
+    
+    <para>A test set XML file must start with the following XML prolog :</para>
+    <programlisting><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
+  <!DOCTYPE testset SYSTEM
+    "classpath://org/ow2/mind/test/mind_test_v1.dtd">]]></programlisting>
+    
+    <para>The top-level element of a test set XML file is <code>"testset"</code>.
+       It must have a <code>"name"</code> attribute that specify its name. This
+       top-level element can contains a set of <code>"config"</code> elements
+       that defines configurations shared by different tests. Each configuration
+       contains a list of command to be executed. After the declaration of shared
+       configurations, tests are listed individually using the <code>"test"</code>
+       element. A test specify the ADL to be tested and the configurations on which
+       it must be tested. These configurations can reference the shared 
+       configuration, or can be test-specific configuration nested in the 
+       <code>"test"</code> element.</para>
+      
+    <informalexample>
+      <para>For example:</para>
+      <programlisting language="testset"><![CDATA[<testset name="testSet">
+  <config name="simple" targetDescriptor="simple">
+    <mindc/>
+    <command>${EXEC_NAME}</command>
+  </config>
+
+  <config name="optimize" targetDescriptor="simple">
+    <mindc cFlags="-O3"/>
+    <command>${EXEC_NAME}</command>
+  </config>
+
+  <config name="warning" targetDescriptor="simple">
+    <mindc cFlags="-Wall -Werror"/>
+    <command>${EXEC_NAME}</command>
+  </config>
+      
+  <test name="test1" adl="foo.Bar" configRefs="all"/>
+  <test name="test2" adl="foo.Toto" configRefs="single, optimize"/>
+</testset>]]></programlisting>
+    </informalexample>
+      
+    <para>The following tables describes the valid XML elements of a test set XML file:</para>
+  
+    <informaltable border="all" width="100%">
+      <tr>
+        <td>
+          <code>testset</code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Top-level element. Contains a set of shared configuration and a 
+            set of test to execute.</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Attributes:</para>
+          <variablelist>
+            <varlistentry>
+              <term><varname>name</varname></term>
+              <listitem><para>The name of the test set.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>nbJobs</varname></term>
+              <listitem><para>(optional) The number of jobs that can execute tests concurrently</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>runner</varname></term>
+              <listitem><para>(optional) The Java class to be used to execute test.</para></listitem>
+            </varlistentry>
+          </variablelist>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Sub-Element:</para>
+          <para><code>config*, test*</code></para>
+        </td>
+      </tr>
+    </informaltable>
+  
+  
+    <informaltable border="all" width="100%">
+      <tr>
+        <td>
+          <code>test</code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Defines a test.</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Attributes:</para>
+          <variablelist>
+            <varlistentry>
+              <term><varname>name</varname></term>
+              <listitem><para>The name of the test.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>adl</varname></term>
+              <listitem><para>(optional) The name of the ADL to test</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>configRefs</varname></term>
+              <listitem>
+                <para>(optional) A comma separated list of shared configuration that must be 
+                  executed for this test. Can be <code>"all"</code> to designated every shared 
+                  configurations.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Sub-Element:</para>
+          <para><code>config*</code></para>
+        </td>
+      </tr>
+    </informaltable>
+  
+    <informaltable border="all" width="100%">
+      <tr>
+        <td>
+          <code>config</code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Configuration element. Defines a set of commands to be executed to
+            test an ADL.</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Attributes:</para>
+          <variablelist>
+            <varlistentry>
+              <term><varname>name</varname></term>
+              <listitem><para>The name of the configuration.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>targetDescriptor</varname></term>
+              <listitem><para>(optional) The target-descriptor to be used by <command>mindc</command>
+                when compiling an ADL.</para></listitem>
+            </varlistentry>
+          </variablelist>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Sub-Element:</para>
+          <para><code>(command|mindc)*</code></para>
+        </td>
+      </tr>
+    </informaltable>
+  
+    <informaltable border="all" width="100%">
+      <tr>
+        <td>
+          <code>command</code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>A command to execute.</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Attributes:</para>
+          <variablelist>
+            <varlistentry>
+              <term><varname>dir</varname></term>
+              <listitem><para>(optional) The directory into which the command must be executed.</para></listitem>
+            </varlistentry>
+          </variablelist>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>content:</para>
+          <para>The command line to be executed. This command can use environment 
+            variables or context variables. See <xref linkend="command-eval"/> for
+            more details.</para>
+        </td>
+      </tr>
+    </informaltable>
+  
+    <informaltable border="all" width="100%">
+      <tr>
+        <td>
+          <code>mindc</code>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Execute the mindc compiler.</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para>Attributes:</para>
+          <variablelist>
+            <varlistentry>
+              <term><varname>adl</varname></term>
+              <listitem><para>(optional) The ADL to compile. If not specified, use the ADL 
+                specified in the current test.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>targetDescriptor</varname></term>
+              <listitem><para>(optional) The target-descriptor to be used. If not specified,
+                use the target-descriptor specified in the current configuration.
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>cFlags</varname></term>
+              <listitem><para>(optional) List of additional C-Flags</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>ldFlags</varname></term>
+              <listitem><para>(optional) List of additional LD-Flags</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><varname>execName</varname></term>
+              <listitem><para>(optional) The name of the executable file produced by mindc.
+                If not specified, a default name is computed base on the test name,
+                the configuration name and the ADL name.</para></listitem>
+            </varlistentry>
+          </variablelist>
+        </td>
+      </tr>
+    </informaltable>
+  </section>
+  
+  <section id="testset.interpolate">
+    <title>Command evaluation</title>
+    
+    <para>Commands to be executed can contain variables that are automatically 
+      replaced by their values. These variables can be environment variables, 
+      Java system properties or some specific contextual variables. A variable
+      starts with <code>${</code> and ends with <code>}</code>. For instance
+      <code>${HOME}</code> will be replace by your home directory location.</para>
+    
+    <para>Specific contextual variables are: </para>
+    <variablelist>
+      <varlistentry>
+        <term><code>TESTSET_NAME</code></term>
+        <listitem><para>The name of the current testset.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>TEST_NAME</code></term>
+        <listitem><para>The name of the current test.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>TEST_ADL</code></term>
+        <listitem><para>The ADL of the current test.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>CONFIG_NAME</code></term>
+        <listitem><para>The name of the current configuration.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>CONFIG_TARGET_DESCRIPTOR</code></term>
+        <listitem><para>The name of the target-descriptor of the current configuration.</para></listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>EXEC_NAME</code></term>
+        <listitem><para>The absolute path of the executable program produced by the last
+          mindc command.</para></listitem>
+      </varlistentry>
+    </variablelist>
+    
+    <para>The <code>EXEC_NAME</code> variable is particularly useful to define a
+      command that run the executable that has been produced by the previous mindc command.</para>
+      
+    <informalexample>
+      <para>For instance:</para>
+      <programlisting language="testset"><![CDATA[<config name="simple">
+  <mindc/>
+  <command>${EXEC_NAME}</command>
+</config>]]></programlisting>
+      <para>In the above configuration, the first command executes the mindc compiler 
+        for the current ADL (i.e. the one defined at test-level). The second command
+        runs the executable produced by mindc.</para>
+    </informalexample>
+  </section>
+</chapter>
